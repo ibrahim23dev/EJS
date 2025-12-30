@@ -1,121 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Flight Invoice - <%= invoiceNo %></title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air Ticket Invoice - <%= invoiceNo %>
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
 
-<div class="invoice-container">
-    <header class="invoice-header">
-        <div class="brand">
-            <h1 class="logo">NARIA<span>TRAVELS</span></h1>
-            <p class="agency-details">
-                123 Travel Plaza, Dhaka, Bangladesh<br>
-                Support: +880 1XXX-XXXXXX | help@nariatravels.com
-            </p>
-        </div>
-        <div class="status-badge-container">
-            <div class="status-badge paid">PAID</div>
-            <div class="invoice-meta">
-                <p><strong>Invoice No:</strong> #<%= invoiceNo %></p>
-                <p><strong>Date:</strong> <%= bookingDate %></p>
-                <p><strong>PNR:</strong> <span class="pnr-code"><%= flight.pnr %></span></p>
+        @media print {
+            .no-print {
+                display: none;
+            }
+
+            body {
+                background-color: white;
+            }
+
+            .invoice-card {
+                border: none !important;
+                box-shadow: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 py-10 print:bg-white print:py-0">
+
+    <div class="max-w-4xl mx-auto bg-white p-8 border border-slate-200 shadow-lg rounded-lg invoice-card">
+
+        <header class="flex justify-between items-start border-b border-slate-200 pb-8">
+            <div>
+                <h1 class="text-3xl font-bold tracking-tight text-blue-900">NARIA<span
+                        class="text-blue-500">TRAVELS</span></h1>
+                <div class="mt-4 text-sm text-slate-500">
+                    <p class="font-semibold text-slate-700 underline underline-offset-4 mb-1">Issued By:</p>
+                    <p>
+                        <%= typeof issuedBy !=='undefined' ? issuedBy : 'System Auto' %>
+                    </p>
+                    <p>System Generated Air Ticket Invoice</p>
+                </div>
+            </div>
+
+            <div class="text-right">
+                <h2 class="text-4xl font-black text-slate-200 leading-none mb-4">INVOICE</h2>
+                <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                    <span class="text-slate-500">Invoice No:</span>
+                    <span class="font-bold text-slate-800">
+                        <%= invoiceNo %>
+                    </span>
+                    <span class="text-slate-500">Issue Date:</span>
+                    <span class="font-bold text-slate-800">
+                        <%= bookingDate %>
+                    </span>
+                    <span class="text-slate-500">Booking Ref:</span>
+                    <span class="font-bold text-slate-800">
+                        <%= bookingRef %>
+                    </span>
+                    <span class="text-slate-500 font-semibold">PNR:</span>
+                    <span class="font-black text-blue-600 uppercase text-lg leading-none">
+                        <%= pnr %>
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-2 gap-8 my-8">
+            <div class="bg-slate-50 p-5 rounded-lg border border-slate-100">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 border-b pb-1">Buyer (B2B
+                    Agent)</h4>
+                <p class="text-blue-900 font-bold text-lg">
+                    <%= agency.name %>
+                </p>
+                <p class="text-xs text-slate-500 mb-2 font-mono">[ID: <%= agency.code %>]</p>
+                <div class="text-sm text-slate-600 space-y-1">
+                    <p>
+                        <%= agency.address %>
+                    </p>
+                    <p><span class="font-semibold italic">Attn:</span>
+                        <%= agency.contactPerson %>
+                    </p>
+                    <p class="text-blue-600 font-medium">
+                        <%= agency.email %> | <%= agency.phone %>
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 p-5 rounded-lg border border-slate-100">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 border-b pb-1">Contact Details
+                </h4>
+                <div class="text-sm space-y-2">
+                    <p class="flex justify-between">
+                        <span class="text-slate-500">Name:</span>
+                        <span class="font-semibold">
+                            <%= contact_name %>
+                        </span>
+                    </p>
+                    <p class="flex justify-between">
+                        <span class="text-slate-500">Email:</span>
+                        <span class="font-semibold text-slate-800">
+                            <%= contact_email %>
+                        </span>
+                    </p>
+                    <p class="flex justify-between">
+                        <span class="text-slate-500">Phone:</span>
+                        <span class="font-semibold">
+                            <%= contact_phone %>
+                        </span>
+                    </p>
+                    <p class="flex justify-between items-center mt-3 pt-2 border-t">
+                        <span class="text-slate-500">Ticket Status:</span>
+                        <span
+                            class="bg-blue-100 text-blue-800 px-3 py-0.5 rounded-full text-xs font-bold uppercase tracking-widest">
+                            <%= ticketStatus %>
+                        </span>
+                    </p>
+                </div>
             </div>
         </div>
-    </header>
 
-    <hr class="divider">
+        <div class="mb-8">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 ml-1">Passenger Information</h4>
+            <table class="w-full text-left text-sm">
+                <thead class="bg-slate-900 text-white uppercase text-[10px] tracking-widest">
+                    <tr>
+                        <th class="px-4 py-3 rounded-l-md">SL</th>
+                        <th class="px-4 py-3">Passenger Name</th>
+                        <th class="px-4 py-3">Type</th>
+                        <th class="px-4 py-3">Gender</th>
+                        <th class="px-4 py-3 text-center">DOB</th>
+                        <th class="px-4 py-3">Passport No</th>
+                        <th class="px-4 py-3 rounded-r-md">Nationality</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                    <% passengers.forEach((pax, index)=> { %>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="px-4 py-3 text-slate-400">
+                                <%= index + 1 %>
+                            </td>
+                            <td class="px-4 py-3 font-bold text-slate-800">
+                                <%= pax.name %>
+                            </td>
+                            <td class="px-4 py-3 italic text-slate-600">
+                                <%= pax.type %>
+                            </td>
+                            <td class="px-4 py-3">
+                                <%= pax.gender %>
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                <%= pax.dob %>
+                            </td>
+                            <td class="px-4 py-3 font-mono text-xs">
+                                <%= pax.passport %>
+                            </td>
+                            <td class="px-4 py-3">
+                                <%= pax.nationality %>
+                            </td>
+                        </tr>
+                        <% }) %>
+                </tbody>
+            </table>
+        </div>
 
-    <div class="info-grid">
-        <div class="info-block">
-            <h4>Passenger Details</h4>
-            <p><strong><%= customer.name %></strong></p>
-            <p><%= customer.email %></p>
-            <p><%= customer.phone %></p>
+        <div class="grid grid-cols-5 gap-8 mb-8">
+            <div class="col-span-3">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 border-b pb-1">Fare Rules &
+                    Remarks</h4>
+                <div class="text-sm space-y-4">
+                    <div>
+                        <p class="font-semibold text-slate-700 mb-1 underline underline-offset-2">Rules:</p>
+                        <p class="text-slate-600 italic leading-relaxed">
+                            <%= fareRulesSummary %>
+                        </p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-slate-700 mb-1">Note:</p>
+                        <p class="text-slate-600">
+                            <%= remarks %>
+                        </p>
+                    </div>
+                    <div
+                        class="flex items-center gap-4 mt-6 p-4 border-2 border-dashed border-slate-200 rounded-lg w-fit">
+                        <div
+                            class="w-12 h-12 bg-slate-100 flex items-center justify-center text-[8px] font-bold text-slate-400 text-center uppercase border border-slate-300">
+                            QR Code</div>
+                        <div class="text-[10px] text-slate-500 uppercase tracking-widest leading-tight">Scan to
+                            verify<br>authenticity</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-2">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 border-b pb-1">Fare Breakdown
+                </h4>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between"><span>Base Fare</span> <span>
+                            <%= currency %>
+                                <%= price.baseFare %>
+                        </span></div>
+                    <div class="flex justify-between text-slate-500"><span>Taxes & Fees</span> <span>
+                            <%= currency %>
+                                <%= price.taxes %>
+                        </span></div>
+                    <div class="flex justify-between font-bold border-t border-slate-100 pt-2 text-slate-700">
+                        <span>Gross Fare</span> <span>
+                            <%= currency %>
+                                <%= price.grossFare %>
+                        </span></div>
+                    <div class="flex justify-between text-red-600 italic font-medium"><span>Agent Commission (-)</span>
+                        <span>
+                            <%= currency %>
+                                <%= price.commissionAmount %>
+                        </span></div>
+                    <div class="flex justify-between text-blue-600"><span>Agent Markup (+)</span> <span>
+                            <%= currency %>
+                                <%= price.markup %>
+                        </span></div>
+                    <div class="flex justify-between text-green-600"><span>Discount (-)</span> <span>
+                            <%= currency %>
+                                <%= price.discount %>
+                        </span></div>
+
+                    <div
+                        class="flex justify-between items-center mt-4 p-3 bg-blue-900 text-white rounded-lg shadow-inner">
+                        <span class="font-bold uppercase text-xs tracking-wider">Total Amount</span>
+                        <span class="text-xl font-bold">
+                            <%= currency %>
+                                <%= price.totalAmount %>
+                        </span>
+                    </div>
+                    <p class="text-[10px] text-right text-slate-400 mt-2"><strong>In Words:</strong>
+                        <%= amountInWords %> Only
+                    </p>
+                </div>
+            </div>
         </div>
-        <div class="info-block text-right">
-            <h4>Booking Reference</h4>
-            <p><strong>GDS Ref:</strong> <%= flight.gdsRef || 'N/A' %></p>
-            <p><strong>Ticket Type:</strong> E-Ticket / Return</p>
-            <p><strong>Status:</strong> Confirmed</p>
+
+        <div class="flex justify-between items-end mt-16 pb-8 border-b border-slate-100">
+            <div class="text-center w-48">
+                <div class="border-t border-slate-400 pt-2 text-xs font-bold uppercase text-slate-500">Authorized
+                    Signatory</div>
+                <div class="mt-2 font-mono italic text-sm text-slate-400">
+                    <%= authorizedSignatory %>
+                </div>
+            </div>
+            <div class="text-center w-48">
+                <div
+                    class="h-24 flex items-center justify-center border-2 border-dashed border-slate-100 rounded-full mb-2 mx-auto w-24 text-[10px] text-slate-300 uppercase italic">
+                    Seal Place</div>
+                <div class="border-t border-slate-400 pt-2 text-xs font-bold uppercase text-slate-500 text-center">
+                    Company Stamp</div>
+            </div>
         </div>
+
+        <footer class="mt-8">
+            <div class="bg-slate-50 p-4 rounded text-[11px] text-slate-500 leading-relaxed">
+                <h5 class="font-bold text-slate-700 uppercase mb-2">Terms & Conditions</h5>
+                <ul class="list-disc pl-4 space-y-1">
+                    <li>Tickets are <span class="font-bold text-slate-700">
+                            <%= refundableStatus %>
+                        </span> as per airline fare rules.</li>
+                    <li>Change and cancellation penalties apply as per BSP/ARC liability notes.</li>
+                    <li>This is a system-generated document and does not require a physical signature.</li>
+                </ul>
+            </div>
+            <div class="mt-8 flex justify-center no-print">
+                <button onclick="window.print()"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all transform hover:scale-105 active:scale-95">
+                    Print / Download PDF
+                </button>
+            </div>
+        </footer>
     </div>
 
-    <section class="flight-details">
-        <h3>Flight Itinerary</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Airline</th>
-                    <th>Flight</th>
-                    <th>Departure</th>
-                    <th>Arrival</th>
-                    <th>Class/Baggage</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="airline-info">
-                            <strong><%= flight.airline %></strong>
-                        </div>
-                    </td>
-                    <td><%= flight.flightNo || 'BS-201' %></td>
-                    <td>
-                        <span class="city-code"><%= flight.from %></span><br>
-                        <small><%= flight.depart %></small>
-                    </td>
-                    <td>
-                        <span class="city-code"><%= flight.to %></span><br>
-                        <small><%= flight.arrive %></small>
-                    </td>
-                    <td>
-                        <%= flight.class %><br>
-                        <small>20kg Check-in</small>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
-
-    <section class="pricing-section">
-        <div class="notes">
-            <h4>Important Information</h4>
-            <ul>
-                <li>Please report at the airport 3 hours before departure.</li>
-                <li>Carry a valid photo ID/Passport and Visa copies.</li>
-                <li>Check-in baggage allowance depends on airline policy.</li>
-            </ul>
-        </div>
-        <div class="fare-calculation">
-            <div class="fare-row">
-                <span>Base Fare</span>
-                <span>৳ <%= price.base %></span>
-            </div>
-            <div class="fare-row">
-                <span>Taxes & Fees</span>
-                <span>৳ <%= price.tax %></span>
-            </div>
-            <div class="fare-row">
-                <span>Service Charge</span>
-                <span>৳ <%= price.service %></span>
-            </div>
-            <div class="fare-row total-row">
-                <span>Total Amount</span>
-                <span>৳ <%= price.total %></span>
-            </div>
-        </div>
-    </section>
-
-    <footer class="invoice-footer">
-        <p>This is a computer-generated invoice. No signature is required.</p>
-        <div class="actions">
-            <button class="btn-print" onclick="window.print()">Download as PDF</button>
-        </div>
-    </footer>
-</div>
-
 </body>
+
 </html>

@@ -1,48 +1,59 @@
 const express = require("express");
+const path = require("path");
 const app = express();
 
 app.set("view engine", "ejs");
+// Ensure your CSS folder is accessible
+app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 
-app.get("/", (req, res) => {
-  res.render("home");
+app.get("/invoice", (req, res) => {
+    // This object MUST contain every variable used in invoice.ejs
+    const invoiceData = {
+        invoiceNo: "INV-2025-001",
+        bookingDate: "30 Dec 2028",
+        bookingRef: "NH-88299",
+        pnr: "Z8X9QP",
+        issuedBy: "Admin - Tanvir Ahmed", 
+        ticketStatus: "Issued",
+        contact_name: "John Doe",
+        contact_email: "john@example.com",
+        contact_phone: "+8801700000000",
+        
+        agency: {
+            name: "Global Travels",
+            code: "GT-992",
+            address: "Banani, Dhaka",
+            contactPerson: "Rahim Uddin",
+            email: "agency@example.com",
+            phone: "01812345678"
+        },
+        
+        passengers: [
+            { name: "MS RAHMAN", type: "ADT", gender: "Male", dob: "1990-05-10", passport: "A1234567", nationality: "Bangladeshi" },
+            { name: "MRS RAHMAN", type: "ADT", gender: "Female", dob: "1992-08-22", passport: "A9876543", nationality: "Bangladeshi" }
+        ],
+        
+        price: {
+            baseFare: 45000,
+            taxes: 5000,
+            grossFare: 50000,
+            commissionAmount: 500,
+            markup: 1000,
+            discount: 200,
+            totalAmount: 50300
+        },
+        amountInWords: "Fifty Thousand Four Hundred",
+        authorizedSignatory: "Tanvir Ahmed",
+        companyStamp: "Naria Holidays Ltd.",
+        currency: "BDT",
+        refundableStatus: "Refundable",
+        fareRulesSummary: "Cancellation fee 2000 BDT before 24 hours.",
+        remarks: "Please report at the airport 3 hours before departure."
+    };
+
+    res.render("invoice", invoiceData);
 });
-
-app.get("/profile", (req, res) => {
-  res.render("profile", {
-    name: "Ibrahim",
-    role: "Software Engineer"
-  });
-});
-
-app.get("/invoice/:id", (req, res) => {
-  res.render("invoice", {
-    invoiceNo: "INV-2026-0012",
-    bookingDate: "15 Jan 2026",
-    customer: {
-      name: "Md Ibrahim",
-      email: "ibrahim@gmail.com",
-      phone: "+880 1XXXXXXXXX"
-    },
-    flight: {
-      airline: "Qatar Airways",
-      from: "Dhaka (DAC)",
-      to: "Rome (FCO)",
-      depart: "20 Jan 2026 - 10:30 AM",
-      arrive: "20 Jan 2026 - 07:45 PM",
-      class: "Economy",
-      passengers: 1
-    },
-    price: {
-      base: 65000,
-      tax: 8500,
-      service: 1500,
-      total: 75000
-    }
-  });
-});
-
-
 
 app.listen(4000, () => {
-  console.log("Server running on http://localhost:4000");
+    console.log("Server running on http://localhost:4000/invoice");
 });
