@@ -1,179 +1,87 @@
+/* Typography and Core Styles */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 :root {
-    --primary: #1e293b;
-    --accent: #2563eb;
-    --text-main: #334155;
-    --text-muted: #64748b;
-    --border-color: #e2e8f0;
-    --bg-light: #f8fafc;
+    --primary-black: #0f172a;
+    --flyghor-blue: #2563eb;
+    --slate-border: #e2e8f0;
 }
 
 body {
-    background: #f1f5f9;
-    font-family: 'Inter', -apple-system, sans-serif;
-    color: var(--text-main);
-    line-height: 1.4;
-    padding: 20px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--primary-black);
+    background-color: #f1f5f9;
+    margin: 0;
 }
 
+/* Watermark CSS - Perfectly Centered & Subtle */
 .invoice-wrapper {
-    max-width: 950px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 40px;
-    border-radius: 4px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-}
-
-/* Header */
-.main-header {
+    position: relative;
+    max-width: 800px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 60px;
+    min-height: 297mm; /* Standard A4 */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
     display: flex;
-    justify-content: space-between;
-    border-bottom: 2px solid var(--primary);
-    padding-bottom: 20px;
-    margin-bottom: 25px;
+    flex-direction: column;
 }
 
-.brand-logo {
-    font-size: 26px;
-    margin: 0;
-    color: var(--primary);
-}
-
-.brand-logo span { color: var(--accent); }
-
-.issuer-info {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 5px;
-}
-
-.invoice-title {
-    font-size: 32px;
-    margin: 0;
-    text-align: right;
-    color: var(--primary);
-}
-
-.meta-grid {
-    display: grid;
-    grid-template-columns: auto auto;
-    gap: 5px 15px;
-    font-size: 13px;
-    margin-top: 10px;
-}
-
-.pnr-highlight {
-    color: #c2410c;
-    background: #fff7ed;
-    padding: 2px 4px;
-    border-radius: 3px;
-}
-
-/* Grids */
-.entity-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    margin-bottom: 30px;
-}
-
-.section-label {
-    background: var(--bg-light);
-    padding: 5px 10px;
-    font-size: 11px;
+.watermark {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-35deg);
+    font-size: 110px;
+    font-weight: 900;
+    color: rgba(15, 23, 42, 0.04); /* Subtly visible but readable */
+    letter-spacing: 15px;
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
-    border-left: 3px solid var(--accent);
 }
 
-.agent-name { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
+/* Table and Content styling */
+.content-layer {
+    position: relative;
+    z-index: 10; /* Ensures text stays above watermark */
+}
 
-/* Tables */
-.data-table {
+.manifest-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 30px;
+    margin: 30px 0;
 }
 
-.data-table th {
+.manifest-table th {
     text-align: left;
-    background: var(--primary);
-    color: white;
-    padding: 10px;
-    font-size: 12px;
-}
-
-.data-table td {
-    padding: 10px;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 13px;
-}
-
-/* Financials */
-.financial-section {
-    display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: 40px;
-    margin-top: 20px;
-}
-
-.calc-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 0;
-    font-size: 13px;
-}
-
-.gross { border-top: 1px dashed var(--border-color); font-weight: 600; }
-.commission { color: #b91c1c; }
-
-.total-final {
-    margin-top: 10px;
-    background: var(--primary);
-    color: white;
-    padding: 15px 10px;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-/* QR and Footer */
-.qr-box {
-    width: 80px;
-    height: 80px;
-    background: #eee;
-    display: flex;
-    align-items: center;
-    text-align: center;
-    font-size: 10px;
-    margin-bottom: 5px;
-    border: 1px solid #ddd;
-}
-
-.t-and-c h5 { margin-bottom: 5px; font-size: 14px; }
-.t-and-c ul { padding-left: 15px; margin: 0; font-size: 11px; color: var(--text-muted); }
-
-.status-pill {
-    background: #dcfce7;
-    color: #166534;
-    padding: 2px 8px;
-    border-radius: 12px;
     font-size: 11px;
-    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #64748b;
+    padding: 12px;
+    border-bottom: 2px solid var(--primary-black);
 }
 
-.btn-print {
-    margin-top: 20px;
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 4px;
+.manifest-table td {
+    padding: 16px 12px;
+    border-bottom: 1px solid var(--slate-border);
+    font-size: 13px;
 }
 
+/* Print Rules */
 @media print {
-    body { background: white; padding: 0; }
-    .invoice-wrapper { box-shadow: none; border: 1px solid #eee; width: 100%; max-width: 100%; }
-    .btn-print { display: none; }
+    .no-print { display: none !important; }
+    body { background: white !important; }
+    .invoice-wrapper {
+        margin: 0 !important;
+        box-shadow: none !important;
+        width: 100% !important;
+        padding: 15mm !important;
+    }
+    .watermark {
+        color: rgba(0, 0, 0, 0.03) !important; /* Lighter for physical print */
+    }
 }
